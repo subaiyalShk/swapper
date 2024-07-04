@@ -22,131 +22,185 @@ import {
   POLYGON_TOKENS_BY_SYMBOL,
   Token,
 } from '@/lib/constants';
+import { PriceResponse } from '../../../types';
+import { useChainId } from 'wagmi';
+import { formatUnits, parseUnits } from 'viem';
+import qs from 'qs';
 
 type SendErc20ModalProps = {
   userAddress: `0x${string}` | undefined;
 };
 
 export default function SwapErc20Modal({ userAddress }: SendErc20ModalProps) {
-  const [isMounted, setIsMounted] = useState(false);
-  const [sellToken, setSellToken] = useState('wmatic');
-  const [sellAmount, setSellAmount] = useState('');
-  const [buyToken, setBuyToken] = useState('usdc');
-  const [buyAmount, setBuyAmount] = useState('');
+    const [isMounted, setIsMounted] = useState(false);
+    const [sellToken, setSellToken] = useState('wmatic');
+    const [sellAmount, setSellAmount] = useState('');
+    const [buyToken, setBuyToken] = useState('usdc');
+    const [buyAmount, setBuyAmount] = useState('');
+    const [price, setPrice] = useState<PriceResponse | undefined>();
+    const [tradeDirection, setSwapDirection] = useState('sell');
+    const chainId = useChainId() || 137;
 
-  const handleSellTokenChange = (value: string) => {
-    setSellToken(value);
-  };
+    const tokensByChain = (chainId: number) => {
+        if (chainId === 137) {
+          return POLYGON_TOKENS_BY_SYMBOL;
+        }
+        return POLYGON_TOKENS_BY_SYMBOL;
+    };
+    const sellTokenObject = tokensByChain(chainId)[sellToken];
+    const buyTokenObject = tokensByChain(chainId)[buyToken];
 
-  function handleBuyTokenChange(value: string) {
-    setBuyToken(value);
-  }
+    const sellTokenDecimals = sellTokenObject.decimals;
+    const buyTokenDecimals = buyTokenObject.decimals;
+    const parsedSellAmount = sellAmount && tradeDirection === 'sell'? parseUnits(sellAmount, sellTokenDecimals).toString() : undefined;
+    const parsedBuyAmount = buyAmount && tradeDirection === 'buy'? parseUnits(buyAmount, buyTokenDecimals).toString() : undefined;
 
-  useEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
+    const handleSellTokenChange = (value: string) => {
+        setSellToken(value);
+    };
+
+    function handleBuyTokenChange(value: string) {
+        setBuyToken(value);
     }
-  }, [isMounted]);
 
-  return (
-    <Dialog>
-      <DialogTrigger asChild className="w-full">
-        <Button>Swap ERC20</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="text-center">Swap ERC20</DialogTitle>
-          <DialogDescription>
-            The amount entered will be swapped for the amount of tokens
-            displayed in the second row
-          </DialogDescription>
-        </DialogHeader>
-        {isMounted ? (
-          <div className="w-full">
-            <form className="flex flex-col w-full gap-y-8">
-              <div className="w-full flex flex-col gap-y-4">
-                <div className="w-full flex items-center gap-1.5">
-                  <Image
-                    alt={buyToken}
-                    className="h-9 w-9 mr-2 rounded-md"
-                    src={POLYGON_TOKENS_BY_SYMBOL[sellToken].logoURI}
-                    width={6}
-                    height={6}
-                  />
-                  <Select
-                    onValueChange={handleSellTokenChange}
-                    defaultValue="wmatic"
-                  >
-                    <SelectTrigger className="w-1/4">
-                      <SelectValue placeholder="Theme" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {POLYGON_TOKENS.map((token: Token) => {
-                        return (
-                          <SelectItem
-                            key={token.address}
-                            value={token.symbol.toLowerCase()}
-                          >
-                            {token.symbol}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                  <Input
-                    className="w-3/4"
-                    type="number"
-                    name="sell-amount"
-                    id="sell-amount"
-                    placeholder="Enter amount..."
-                    required
-                  />
+    useEffect(() => {
+        if (!isMounted) {
+        setIsMounted(true);
+        }
+    }, [isMounted]);
+
+    useEffect(() => {
+        const params = {
+          sellToken: sellTokenObject.address,
+          buyToken: buyTokenObject.address,
+          sellAmount: parsedSellAmount,
+          buyAmount: parsedBuyAmount,
+          takerAddress: userAddress,
+        };
+    
+        async function main() {
+          const response = await fetch(`/api/price?${qs.stringify(params)}`);
+          const data = await response.json();
+    
+          if (data.buyAmount) {
+            setBuyAmount(formatUnits(data.buyAmount, buyTokenObject.decimals));
+            setPrice(data);
+          }
+        }
+    
+        if (sellAmount !== '') {
+          main();
+        }
+      }, [
+        sellTokenObject.address,
+        buyTokenObject.address,
+        parsedSellAmount,
+        parsedBuyAmount,
+        userAddress,
+        sellAmount,
+        setPrice,
+      ]
+    );
+
+    return (
+        <Dialog>
+        <DialogTrigger asChild className="w-full">
+            <Button>Swap ERC20</Button>
+        </DialogTrigger>
+        <DialogContent>
+            <DialogHeader>
+            <DialogTitle className="text-center">Swap ERC20</DialogTitle>
+            <DialogDescription>
+                The amount entered will be swapped for the amount of tokens
+                displayed in the second row
+            </DialogDescription>
+            </DialogHeader>
+            {isMounted ? (
+            <div className="w-full">
+                <form className="flex flex-col w-full gap-y-8">
+                <div className="w-full flex flex-col gap-y-4">
+                    <div className="w-full flex items-center gap-1.5">
+                    <Image
+                        alt={buyToken}
+                        className="h-9 w-9 mr-2 rounded-md"
+                        src={POLYGON_TOKENS_BY_SYMBOL[sellToken].logoURI}
+                        width={6}
+                        height={6}
+                    />
+                    <Select
+                        onValueChange={handleSellTokenChange}
+                        defaultValue="wmatic"
+                    >
+                        <SelectTrigger className="w-1/4">
+                        <SelectValue placeholder="Theme" />
+                        </SelectTrigger>
+                        <SelectContent>
+                        {POLYGON_TOKENS.map((token: Token) => {
+                            return (
+                            <SelectItem
+                                key={token.address}
+                                value={token.symbol.toLowerCase()}
+                            >
+                                {token.symbol}
+                            </SelectItem>
+                            );
+                        })}
+                        </SelectContent>
+                    </Select>
+                    <Input
+                        className="w-3/4"
+                        type="number"
+                        name="sell-amount"
+                        id="sell-amount"
+                        placeholder="Enter amount..."
+                        required
+                    />
+                    </div>
+                    <div className="w-full flex items-center gap-1.5">
+                    <Image
+                        alt={buyToken}
+                        className="h-9 w-9 mr-2 rounded-md"
+                        src={POLYGON_TOKENS_BY_SYMBOL[buyToken].logoURI}
+                        width={6}
+                        height={6}
+                    />
+                    <Select
+                        onValueChange={handleBuyTokenChange}
+                        defaultValue="usdc"
+                    >
+                        <SelectTrigger className="w-1/4">
+                        <SelectValue placeholder="Buy..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                        {POLYGON_TOKENS.map((token: Token) => {
+                            return (
+                            <SelectItem
+                                key={token.address}
+                                value={token.symbol.toLowerCase()}
+                            >
+                                {token.symbol}
+                            </SelectItem>
+                            );
+                        })}
+                        </SelectContent>
+                    </Select>
+                    <Input
+                        className="w-3/4"
+                        type="number"
+                        id="buy-amount"
+                        name="buy-amount"
+                        placeholder="Enter amount..."
+                        disabled
+                    />
+                    </div>
                 </div>
-                <div className="w-full flex items-center gap-1.5">
-                  <Image
-                    alt={buyToken}
-                    className="h-9 w-9 mr-2 rounded-md"
-                    src={POLYGON_TOKENS_BY_SYMBOL[buyToken].logoURI}
-                    width={6}
-                    height={6}
-                  />
-                  <Select
-                    onValueChange={handleBuyTokenChange}
-                    defaultValue="usdc"
-                  >
-                    <SelectTrigger className="w-1/4">
-                      <SelectValue placeholder="Buy..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {POLYGON_TOKENS.map((token: Token) => {
-                        return (
-                          <SelectItem
-                            key={token.address}
-                            value={token.symbol.toLowerCase()}
-                          >
-                            {token.symbol}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                  <Input
-                    className="w-3/4"
-                    type="number"
-                    id="buy-amount"
-                    name="buy-amount"
-                    placeholder="Enter amount..."
-                    disabled
-                  />
-                </div>
-              </div>
-              <Button>Swap</Button>
-            </form>
-          </div>
-        ) : (
-          <p>Loading...</p>
-        )}
-      </DialogContent>
-    </Dialog>
-  );
+                <Button>Swap</Button>
+                </form>
+            </div>
+            ) : (
+            <p>Loading...</p>
+            )}
+        </DialogContent>
+        </Dialog>
+    );
 }
