@@ -18,13 +18,31 @@ import {
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import {
-  POLYGON_TOKENS,
-  POLYGON_TOKENS_BY_SYMBOL,
-  Token,
+    POLYGON_EXCHANGE_PROXY,
+    POLYGON_TOKENS,
+    POLYGON_TOKENS_BY_SYMBOL,
+    Token,
 } from '@/lib/constants';
-import { PriceResponse } from '../../../types';
-import { useChainId } from 'wagmi';
-import { formatUnits, parseUnits } from 'viem';
+import { PriceResponse, QuoteResponse} from '../../../types';
+import { 
+    useChainId,
+    useBalance,
+    useReadContract,
+    useSendTransaction,
+    useWaitForTransactionReceipt,
+    useWriteContract,
+} from 'wagmi';
+// toast for better ux
+import { toast } from 'sonner';
+import {
+    Address,
+    erc20Abi,
+    formatUnits,
+    parseEther,
+    parseUnits
+} from 'viem';
+  
+  
 import qs from 'qs';
 
 type SendErc20ModalProps = {
@@ -39,6 +57,8 @@ export default function SwapErc20Modal({ userAddress }: SendErc20ModalProps) {
     const [buyAmount, setBuyAmount] = useState('');
     const [price, setPrice] = useState<PriceResponse | undefined>();
     const [tradeDirection, setSwapDirection] = useState('sell');
+    const [quote, setQuote] = useState<QuoteResponse | undefined>();
+    const [finalize, setFinalize] = useState(false);
     const chainId = useChainId() || 137;
 
     const tokensByChain = (chainId: number) => {
@@ -54,6 +74,34 @@ export default function SwapErc20Modal({ userAddress }: SendErc20ModalProps) {
     const buyTokenDecimals = buyTokenObject.decimals;
     const parsedSellAmount = sellAmount && tradeDirection === 'sell'? parseUnits(sellAmount, sellTokenDecimals).toString() : undefined;
     const parsedBuyAmount = buyAmount && tradeDirection === 'buy'? parseUnits(buyAmount, buyTokenDecimals).toString() : undefined;
+
+    const { data: userTokenBalance } = useBalance({
+        address: userAddress,
+        token: sellTokenObject.address,
+    });
+
+    async function getQuote(e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+        if (!userAddress || !price) {
+          toast.warning('You must connect your wallet...');
+          return;
+        }
+    
+        const params = {
+          sellToken: price.sellTokenAddress,
+          buyToken: price.buyTokenAddress,
+          sellAmount: price.sellAmount,
+          takerAddress: userAddress,
+        };
+        try {
+          const response = await fetch(`/api/quote?${qs.stringify(params)}`);
+          const data = await response.json();
+          setQuote(data);
+          setFinalize(true);
+        } catch (error) {
+          console.error(error);
+        }
+      }
 
     const handleSellTokenChange = (value: string) => {
         setSellToken(value);
@@ -101,6 +149,8 @@ export default function SwapErc20Modal({ userAddress }: SendErc20ModalProps) {
         setPrice,
       ]
     );
+
+    
 
     return (
         <Dialog>
