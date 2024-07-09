@@ -73,12 +73,12 @@ export default function Home() {
                   </DataList.Item>
                   <DataList.Item>
                     <DataList.Label minWidth="88px">ENS</DataList.Label>
-                    <DataList.Value>{ensName}</DataList.Value>
+                    <DataList.Value>{ensName?ensName:<Link href="https://ens.domains/">Register your ENS here</Link>}</DataList.Value>
                   </DataList.Item>
                   <DataList.Item>
                     <DataList.Label minWidth="88px">Wallet Address</DataList.Label>
                     <DataList.Value>
-                      <Link href="mailto:vlad@workos.com">{address}</Link>
+                      <Link href={'https://etherscan.io/address/'+address}>{address}</Link>
                     </DataList.Value>
                   </DataList.Item>
                   <DataList.Item>

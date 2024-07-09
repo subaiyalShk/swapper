@@ -55,8 +55,7 @@ export default function Navbar() {
         </Box>
         <Box pr={'10px'}>
           <Button
-            color='red'
-            variant="outline"
+            variant={'destructive'}
             size="default"
             onClick={()=>disconnect()}
           >
