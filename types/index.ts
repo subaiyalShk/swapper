@@ -1,5 +1,16 @@
 import { Address } from 'viem';
 
+export interface AppState {
+  user: string | null;
+  theme: 'light' | 'dark';
+  // Add other state properties as needed
+}
+
+export interface AppContextType {
+  state: AppState;
+  setState: (state: AppState) => void;
+}
+
 // https://docs.0x.org/0x-api-swap/api-references/get-swap-v1-price#response
 export interface PriceResponse {
   chainId: number;

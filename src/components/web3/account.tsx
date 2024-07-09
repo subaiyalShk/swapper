@@ -9,7 +9,7 @@ import SendEthModal from '@/components/web3/sendEthModal';
 
 export function Account() {
   const [isMounted, setIsMounted] = useState(false);
-  const {address: userAddress, address, chain, chainId, isConnected } = useAccount();
+  const {address: userAddress, address, chain, chainId } = useAccount();
   const accountBalance = useBalance({
     address,
   });
@@ -27,14 +27,6 @@ export function Account() {
       setIsMounted(true);
     }
   }, [isMounted]);
-
-  if (!isConnected) {
-    return (
-      <div>
-        <p className="text-lg">Not connected</p>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col items-center text-center gap-y-4">

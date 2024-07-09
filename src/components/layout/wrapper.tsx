@@ -9,20 +9,19 @@ export interface NavbarProps {
   navTitle?: string;
 }
 
-const PageWithNavbar: React.FC<NavbarProps & { children: React.ReactNode }> = ({
+const Wrapper: React.FC<NavbarProps & { children: React.ReactNode }> = ({
   children,
 }) => {
   return (
     <>
-      <Navbar />
       <main
-        className={`absolute h-[calc(100vh-80px)] top-[${NAVBAR_HEIGHT}] flex w-full flex-col items-center overflow-x-hidden overflow-y-scroll`}
+        className={'main'}
       >
         {children}
-        <Footer isHomePage={false} />
       </main>
     </>
+   
   );
 };
 
-export default PageWithNavbar;
+export default Wrapper;
