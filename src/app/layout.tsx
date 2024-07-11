@@ -29,20 +29,20 @@ export default function RootLayout({
       <body className={cn(
         'min-h-screen bg-background font-sans antialiased', fontSans.variable
       )}>
-        <GlobalStateProvider>
           <Web3Provider>
-            <Theme 
-              // appearance="dark"
-              accentColor="cyan"
-              grayColor="mauve"
-              radius="medium"
-              scaling="100%"
-            >
-              {children}
-            </Theme>
+            <GlobalStateProvider>
+              <Theme 
+                // appearance="dark"
+                accentColor="cyan"
+                grayColor="mauve"
+                radius="medium"
+                scaling="100%"
+              >
+                {children}
+              </Theme>
+            </GlobalStateProvider>
           </Web3Provider>
           <Toaster richColors/>
-        </GlobalStateProvider>
       </body>
     </html>
   );

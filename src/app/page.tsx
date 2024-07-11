@@ -1,37 +1,33 @@
 'use client';
-import { useState, useEffect } from 'react';
-import PageWithNavbar from '@/components/layout/wrapper';
-import { Account } from '@/components/web3/account';
+import { useState, useContext } from 'react';
 import { ConnectKitButton } from 'connectkit';
-import SignInPage from '@/components/signInPage';
 import Wrapper from '@/components/layout/wrapper';
-import { Button, Box, Card, Flex, Avatar, Text, DataList, Badge, Code, IconButton, Link} from '@radix-ui/themes';
-import { useAccount, useBalance, useEnsAvatar, useEnsName } from 'wagmi';
-import { mainnet } from 'viem/chains';
+import {Flex} from '@radix-ui/themes';
 import Navbar from '../components/layout/navbar';
 import NetworkCard from '../components/layout/networkCard';
 import ContractCard from '@/components/layout/contractCard';
-
+import {AppContext} from '@/providers/globalStateProvider';
 
 export default function Home() {
-  const [mode, setMode] = useState<'native' | 'erc20'| null>(null);
-  const {address: userAddress, address, chain, chainId, isConnected } = useAccount();
-  const accountBalance = useBalance({address});
-  const { data: ensName } = useEnsName({address, chainId: mainnet.id});
-  const { data: ensAvatar } = useEnsAvatar({name: ensName!, chainId: mainnet.id});
-
-  useEffect(() => {
-   console.log('ensName', ensName)
-   console.log('ensAvatar', ensAvatar)
-   console.log('accountBalance', accountBalance)
-  },[])
-
+  // ----- Global State Variables -----
+  const {
+    chainId, 
+    chain,
+    userAddress,
+    ensName,
+    ensAvatar,
+    accountBalance,
+    isConnected
+  } = useContext(AppContext);
+  
+  // ---- Render login page
   if (!isConnected) {
     return (
       <Wrapper>
         <ConnectKitButton />
       </Wrapper>
     )
+  // ---- Render the main page
   }else{
     return (
       <>
@@ -44,7 +40,7 @@ export default function Home() {
               address={userAddress} 
               ensName={ensName} 
               ensAvatar={ensAvatar}
-              balance={accountBalance?.data?.formatted}
+              balance={accountBalance?.formatted}
             />
             <ContractCard 
               userAddress={userAddress}

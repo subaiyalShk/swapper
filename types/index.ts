@@ -7,8 +7,14 @@ export interface AppState {
 }
 
 export interface AppContextType {
-  state: AppState;
-  setState: (state: AppState) => void;
+  chainId: any; 
+  chain: any;
+  userAddress: any;
+  ensName: any;
+  ensAvatar: any;
+  accountBalance: any;
+  isConnected: any;
+  refetchNativeBalance: any;
 }
 
 // https://docs.0x.org/0x-api-swap/api-references/get-swap-v1-price#response

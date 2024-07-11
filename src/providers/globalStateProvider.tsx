@@ -1,38 +1,53 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AppState, AppContextType } from '../../types';
+import { useAccount, useBalance, useEnsAvatar, useEnsName } from 'wagmi';
+import { mainnet } from 'viem/chains';
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
-
-export const useAppContext = () => {
-  const context = useContext(AppContext);
-  if (context === undefined) {
-    throw new Error('useAppContext must be used within an AppProvider');
-  }
-  return context;
-};
+export const AppContext = createContext({
+    chainId: 0,
+    chain: null,
+    userAddress: '',
+    ensName: '',
+    ensAvatar: '',
+    accountBalance: null,
+    isConnected: false
+    } as AppContextType);
 
 export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, setStateInternal] = useState<AppState>({
-    user: null,
-    theme: 'light',
-  });
+  
+  // -------- User account variables ----------
+  const {
+    address: userAddress, 
+    address, 
+    chain, 
+    chainId, 
+    isConnected 
+  } = useAccount();
+  // -------- User account balance ----------
+  const { 
+    data: accountBalance,
+    // use this function to refetch the balance
+    // usefull when we send tokens to a different address
+    // and we want to see the updated balance
+    refetch:refetchNativeBalance
+  } = useBalance({address});
+  const { data: ensName } = useEnsName({address, chainId: mainnet.id});
+  const { data: ensAvatar } = useEnsAvatar({name: ensName!, chainId: mainnet.id});
 
-  useEffect(() => {
-    // Load initial state from session storage
-    const storedState = sessionStorage.getItem('appState');
-    if (storedState) {
-      setStateInternal(JSON.parse(storedState));
-    }
-  }, []);
 
-  const setState = (newState: AppState) => {
-    setStateInternal(newState);
-    sessionStorage.setItem('appState', JSON.stringify(newState));
-  };
 
   return (
-    <AppContext.Provider value={{ state, setState }}>
+    <AppContext.Provider value={{ 
+        chainId, 
+        chain,
+        userAddress,
+        ensName,
+        ensAvatar,
+        accountBalance,
+        isConnected,
+        refetchNativeBalance
+    }}>
       {children}
     </AppContext.Provider>
   );
