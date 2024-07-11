@@ -32,15 +32,13 @@ export default function RootLayout({
         <GlobalStateProvider>
           <Web3Provider>
             <Theme 
-              appearance="dark"
+              // appearance="dark"
               accentColor="cyan"
               grayColor="mauve"
               radius="medium"
               scaling="100%"
             >
-              <div className="bg-[#1a1a2e] text-[#e0e0e0]">
-                {children}
-              </div>
+              {children}
             </Theme>
           </Web3Provider>
           <Toaster richColors/>

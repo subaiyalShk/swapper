@@ -1,3 +1,4 @@
+'use client'
 import { useEffect } from 'react';
 import {Address,erc20Abi,parseEther} from 'viem';
 import { useChainId,useReadContract,useWaitForTransactionReceipt,useWriteContract} from 'wagmi';

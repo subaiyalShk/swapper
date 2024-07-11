@@ -1,6 +1,5 @@
+'use client'
 import React from 'react';
-import Navbar from './navbar';
-import Footer from './footer';
 
 const NAVBAR_HEIGHT = '80px'; // 5rem / h-20 tw
 

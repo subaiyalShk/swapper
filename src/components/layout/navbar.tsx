@@ -28,7 +28,7 @@ export default function Navbar() {
   const { disconnect } = useDisconnect();
 
   return (
-    <header className="h-20 w-full bg-background">
+    <Card className="sticky top-0 z-10 shadow-lg">
       <Flex justify={'between'} align={'center'} height="100%">
         <Box width="64px" pl={'10px'}>
           <MobileMenu menuItems={MENU_ITEMS} pathname={pathname} />
@@ -63,18 +63,6 @@ export default function Navbar() {
           </Button>
         </Box>
       </Flex>
-        {/* <div>
-          <Link className="flex w-20 items-center" href="/">
-            <Image
-              src="/images/logos/dabl-club-logo-black.png"
-              alt="Dabl Club logo"
-              width={512}
-              height={512}
-              className="h-20 w-20 transition duration-300 ease-in-out hover:scale-90"
-            />
-            <span className="sr-only">Regen Token</span>
-          </Link>
-        </div> */}
-    </header>
+    </Card>
   );
 }
