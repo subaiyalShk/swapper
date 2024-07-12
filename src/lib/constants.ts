@@ -17,15 +17,6 @@ export interface Token {
 export const POLYGON_TOKENS: Token[] = [
     {
         chainId: 137,
-        name: "Dai - PoS",
-        symbol: "DAI",
-        decimals: 18,
-        address: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
-        logoURI:
-            "https://raw.githubusercontent.com/maticnetwork/polygon-token-assets/main/assets/tokenAssets/dai.svg",
-    },
-    {
-        chainId: 137,
         name: 'Wrapped Matic',
         symbol: 'WMATIC',
         decimals: 18,

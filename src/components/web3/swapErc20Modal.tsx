@@ -42,7 +42,7 @@ import {
     parseEther,
     parseUnits
 } from 'viem';
-  
+  import ApproveOrReviewButton from './approveOrReviewBtn';
   
 import qs from 'qs';
 
@@ -81,6 +81,13 @@ export default function SwapErc20Modal({ userAddress }: SendErc20ModalProps) {
         token: sellTokenObject.address,
     });
 
+    // Check if user can cover the desired sellAmount comparing it to the user's token balance
+    const insufficientBalance =
+    userTokenBalance && sellAmount
+      ? parseUnits(sellAmount, sellTokenDecimals) > userTokenBalance.value
+      : true;
+
+    
     async function getQuote(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         if (!userAddress || !price) {
@@ -126,12 +133,15 @@ export default function SwapErc20Modal({ userAddress }: SendErc20ModalProps) {
           buyAmount: parsedBuyAmount,
           takerAddress: userAddress,
         };
+
+        console.log(params);
     
         async function main() {
           const response = await fetch(`/api/price?${qs.stringify(params)}`);
           const data = await response.json();
-    
+          console.log(data);
           if (data.buyAmount) {
+            
             setBuyAmount(formatUnits(data.buyAmount, buyTokenObject.decimals));
             setPrice(data);
           }
@@ -204,6 +214,11 @@ export default function SwapErc20Modal({ userAddress }: SendErc20ModalProps) {
                         name="sell-amount"
                         id="sell-amount"
                         placeholder="Enter amount..."
+                        value={sellAmount}
+                        onChange={(event) => {
+                          setSwapDirection('sell');
+                          setSellAmount(event.target.value)
+                        }}
                         required
                     />
                     </div>
@@ -241,11 +256,18 @@ export default function SwapErc20Modal({ userAddress }: SendErc20ModalProps) {
                         id="buy-amount"
                         name="buy-amount"
                         placeholder="Enter amount..."
+                        value={buyAmount}
                         disabled
                     />
                     </div>
                 </div>
-                <Button>Swap</Button>
+                <ApproveOrReviewButton 
+                  sellAmount={sellAmount}
+                  sellTokenAddress={POLYGON_TOKENS_BY_SYMBOL[sellToken].address}
+                  userAddress={userAddress as `0x${string}`}
+                  onClick={getQuote}
+                  disabled={insufficientBalance}
+                />
                 </form>
             </div>
             ) : (

@@ -72,8 +72,8 @@ const ContractCard: React.FC<ContractCardProps> = ({userAddress}) => {
         data: erc20Balance,
         // we use this variable to show a loading state of the card 
         isLoading, 
-        //once a transaction to claim tokens is executed, 
-        //we refetch the balance of the user
+        // When isConfirmed is true -> transaction is on the blockchain, 
+        // we refetch the balance of the user
         refetch 
     } = useReadContract({
         abi: BootcampTokenABI,
@@ -223,7 +223,7 @@ const ContractCard: React.FC<ContractCardProps> = ({userAddress}) => {
                                     :
                                     <>
                                         <SendErc20Modal userAddress={`0x${userAddress}`} />
-                                        <SwapErc20Modal userAddress={`0x${userAddress}`} />
+                                        <SwapErc20Modal userAddress={userAddress as `0x${string}`} />
                                     </>
                                 }
                             </DataList.Root>
