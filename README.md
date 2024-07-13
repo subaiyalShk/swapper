@@ -96,9 +96,25 @@ we will not go indepth on radix-ui as we are also using shadcn in our app and we
 <img width="483" alt="Screenshot 2024-07-12 at 8 18 00 PM" src="https://github.com/user-attachments/assets/5cb65b68-e015-46ff-a458-d4885a6157d3">
 
 This component is the first child of Layout and it conditionally renders either the connectkit button or the dashboard.
+state variable we access in this component are :
+```
+const {
+    chainId, 
+    chain,
+    userAddress,
+    ensName,
+    ensAvatar,
+    accountBalance,
+    isConnected
+  } = useContext(AppContext);
+```
 The dashboard is nothing but two siblings: networkcard and contractcard
 - NetworkCard -> lets users read their native balance, their connected chain, address, ens, and lets them send native currency to another wallet.
+<img width="744" alt="Screenshot 2024-07-12 at 8 43 59 PM" src="https://github.com/user-attachments/assets/7bac13b7-fd32-4180-936a-733c687a3b20">
 - ContractCard -> lets users read balance associated to a smart contract, can see address of the smart contract and allows them to claim tokens. If a user has already claimed their tokens then the claim button is hidden and instead Send ERC20 button or Swap ERC 20 button is rendered. 
+<img width="616" alt="Screenshot 2024-07-12 at 9 29 28 PM" src="https://github.com/user-attachments/assets/4945f433-c8de-4571-8bb2-a4e345eaa98d">
+
+
 
 
 
