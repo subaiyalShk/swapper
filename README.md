@@ -1,4 +1,5 @@
 ## Client Side Rendring Architecture
+
 ### Root file AKA Layout.tsx
 
 <img width="551" alt="Screenshot 2024-07-12 at 7 35 59 PM" src="https://github.com/user-attachments/assets/3b13decf-f631-4db5-a183-a6df7ee15652">
@@ -111,17 +112,12 @@ const {
 The dashboard is nothing but two siblings: networkcard and contractcard
 - NetworkCard -> lets users read their native balance, their connected chain, address, ens, and lets them send native currency to another wallet.
 <img width="744" alt="Screenshot 2024-07-12 at 8 43 59 PM" src="https://github.com/user-attachments/assets/7bac13b7-fd32-4180-936a-733c687a3b20">
+
 - ContractCard -> lets users read balance associated to a smart contract, can see address of the smart contract and allows them to claim tokens. If a user has already claimed their tokens then the claim button is hidden and instead Send ERC20 button or Swap ERC 20 button is rendered. 
 <img width="616" alt="Screenshot 2024-07-12 at 9 29 28 PM" src="https://github.com/user-attachments/assets/4945f433-c8de-4571-8bb2-a4e345eaa98d">
 
 
-
-
-
-
-
-
-## Getting Started
+## Running App on Local Machine 
 
 First, run the development server:
 
