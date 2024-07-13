@@ -14,7 +14,7 @@ here we are using a couple different libraries that takes care of the heavy lift
 - Handeling Async communication -> TanStack (docs: https://tanstack.com/)
 
 #### Global State Provider: Stores data and CRUD operations that can be leveraged by child components throughout the render tree. We import Web3Provider hooks here. 
-<img width="493" alt="Screenshot 2024-07-12 at 7 42 11 PM" src="https://github.com/user-attachments/assets/bf3060f3-df2b-4c9b-9c86-6839277dcca6">
+<img width="492" alt="Screenshot 2024-07-12 at 8 06 23 PM" src="https://github.com/user-attachments/assets/cb7229a6-460c-4248-9295-b24f7d5d0f34">
 
 We can neatly abstract and manage all datastorage CRUD operations from this file as it acts like a controller file which communicates with Web3 providers and also with the entire DOM tree. 
 to add a new data of function follow these steps:
