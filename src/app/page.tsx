@@ -4,8 +4,8 @@ import { ConnectKitButton } from 'connectkit';
 import Wrapper from '@/components/layout/wrapper';
 import {Flex} from '@radix-ui/themes';
 import Navbar from '../components/layout/navbar';
-import NetworkCard from '../components/layout/networkCard';
-import ContractCard from '@/components/layout/contractCard';
+import NetworkCard from '../components/web3/networkCard';
+import ContractCard from '@/components/web3/contractCard';
 import {AppContext} from '@/providers/globalStateProvider';
 import Image from 'next/image'
 

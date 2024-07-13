@@ -21,8 +21,6 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import BootcampTokenABI from '@/lib/contracts/BootcampTokenABI';
 
-
-
 type SendErc20ModalProps = {
   userAddress: `0x${string}` | undefined;
 };
