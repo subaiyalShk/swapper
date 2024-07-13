@@ -1,9 +1,20 @@
-## client 
-providers
-- WagmiProvider; 
-- 
+## Client Side Rendring Architecture
+### Root file AKA Layout.tsx
 
-## server
+<img width="551" alt="Screenshot 2024-07-12 at 7 35 59 PM" src="https://github.com/user-attachments/assets/3b13decf-f631-4db5-a183-a6df7ee15652">
+
+This is the root file and the top most component in our render tree. Here we mount all the required providers.
+#### Web3 provider: communicates with external services and Global State. 
+<img width="493" alt="Screenshot 2024-07-12 at 7 42 11 PM" src="https://github.com/user-attachments/assets/bf3060f3-df2b-4c9b-9c86-6839277dcca6">
+
+#### Global State Provider: Stores data and CRUD operations that can be leveraged by child components throughout the render tree. We import Web3Provider hooks here. 
+<img width="493" alt="Screenshot 2024-07-12 at 7 42 11 PM" src="https://github.com/user-attachments/assets/bf3060f3-df2b-4c9b-9c86-6839277dcca6">
+
+###Theme provider: provides radix ui theme variables to the entire render tree. 
+
+
+
+
 
 
 
