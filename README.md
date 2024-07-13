@@ -2,10 +2,12 @@
 ### Root file AKA Layout.tsx
 
 <img width="551" alt="Screenshot 2024-07-12 at 7 35 59 PM" src="https://github.com/user-attachments/assets/3b13decf-f631-4db5-a183-a6df7ee15652">
+
 This is the root file and the top most component in our render tree. Here we mount all the required providers. These providers basically supply the entire app on the client side with data and communication with external sources. Often you can also choose to make api calls or store data locally or each component but in some cases you need to pass data to child nodes that are nested very deep in the render tree or move data from on sibling to another.
 
 #### Web3 provider: communicates with external services and Global State. 
 <img width="493" alt="Screenshot 2024-07-12 at 7 42 11 PM" src="https://github.com/user-attachments/assets/bf3060f3-df2b-4c9b-9c86-6839277dcca6">
+
 here we are using a couple different libraries that takes care of the heavy lifting when it comes to the following:
 - communication with external wallets -> ConnectKit (docs: https://docs.family.co/connectkit)
 - Reading and Writing to blockchain -> Wagmi (docs: https://wagmi.sh/react/getting-started)
@@ -13,13 +15,78 @@ here we are using a couple different libraries that takes care of the heavy lift
 
 #### Global State Provider: Stores data and CRUD operations that can be leveraged by child components throughout the render tree. We import Web3Provider hooks here. 
 <img width="493" alt="Screenshot 2024-07-12 at 7 42 11 PM" src="https://github.com/user-attachments/assets/bf3060f3-df2b-4c9b-9c86-6839277dcca6">
+
 We can neatly abstract and manage all datastorage CRUD operations from this file as it acts like a controller file which communicates with Web3 providers and also with the entire DOM tree. 
 to add a new data of function follow these steps:
 1. create a state hook or import a state hook from Web3 provider file
+```
+//example
+// -------- User account variables ----------
+  const {
+    address: userAddress, 
+    address, 
+    chain, 
+    chainId, 
+    isConnected 
+  } = useAccount();
+```
+
 2. create a type
+```
+//example
+export interface AppContextType {
+  chainId: any; 
+  chain: any;
+  userAddress: any;
+  ensName: any;
+  ensAvatar: any;
+  accountBalance: any;
+  isConnected: any;
+  refetchNativeBalance: any;
+}
+```
+
 3. set inital state
+```
+//example
+export const AppContext = createContext({
+    chainId: 0,
+    chain: null,
+    userAddress: '',
+    ensName: '',
+    ensAvatar: '',
+    accountBalance: null,
+    isConnected: false
+} as AppContextType);
+```
+
 4. make the data available to the entire DOM tree
+```
+//example
+  return (
+    <AppContext.Provider value={{ 
+        chainId, 
+        chain,
+        userAddress,
+        ensName,
+        ensAvatar,
+        accountBalance,
+        isConnected,
+        refetchNativeBalance
+    }}>
+      {children}
+    </AppContext.Provider>
+  );
+```
 5. listen for data in the child components 
+```
+//example
+import {AppContext} from '@/providers/globalStateProvider';
+
+export default function SendEthModal() {
+  // we trigger this function to get the updated balance after the transaction is confirmed
+  const {refetchNativeBalance, accountBalance} = useContext(AppContext);
+```
 
 #### Theme Provider: provides radix ui theme variables to the entire render tree. 
 we will not go indepth on radiux as we are also using shadcn in our app and we might need to refactor since this is causing some styling conlficts.
