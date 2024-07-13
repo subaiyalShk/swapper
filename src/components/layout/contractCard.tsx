@@ -23,15 +23,7 @@ import BootcampTokenABI from '@/lib/contracts/BootcampTokenABI';
 import {toast} from 'sonner';
 import SendErc20Modal from '@/components/web3/sendErc20Modal';
 import SwapErc20Modal from '@/components/web3/swapErc20Modal';
-import {
-    Drawer,
-    DrawerContent,
-    DrawerDescription,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from "@/components/ui/drawer"
-import { Progress } from "@/components/ui/progress"
+import TriggerTransaction from '@/components/layout/triggerTransaction';
 
 const NAVBAR_HEIGHT = '80px'; // 5rem / h-20 tw
 
@@ -127,17 +119,6 @@ const ContractCard: React.FC<ContractCardProps> = ({userAddress}) => {
 
     }
 
-    // ------------ Progress bar percentage ---------------------
-    const progressPercentage = () => {
-        if (isPending) {
-            return 25;
-        } else if (isConfirming) {
-            return 50;
-        } else if (isConfirmed) {
-            return 100;
-        }
-        return 0;
-    }
 
     // ------------ Render the card ---------------------
     return (
@@ -175,51 +156,15 @@ const ContractCard: React.FC<ContractCardProps> = ({userAddress}) => {
                                 }
                                 {
                                     erc20Balance===0n?
-                                        <Drawer >
-                                        <DrawerTrigger disabled={isPendingClaim} onClick={handleClaimTokens}>
-                                            <Button>Claim Tokens</Button>
-                                        </DrawerTrigger>
-                                        <DrawerContent>
-                                            <DrawerHeader>
-                                                <DrawerTitle>Please Wait</DrawerTitle>
-                                                <DrawerDescription>
-                                                    <Flex direction={'column'} gap="3">
-                                                        <Box height="24px">
-                                                            {isPending? 
-                                                                <Flex align={'center'}>
-                                                                    <TimerIcon/>
-                                                                    <Text style={{'marginLeft':'10px'}}>submitting transaction</Text>
-                                                                </Flex> 
-                                                                :
-                                                                <Flex align={'center'}>
-                                                                    <CheckCircledIcon/>
-                                                                    <Text style={{'marginLeft':'10px'}}>transaction submitted</Text>
-                                                                </Flex>
-                                                            }
-                                                        </Box>
-                                                        <Box height="24px">
-                                                            {hash? "Transaction created: "+hash : ""}
-                                                        </Box>
-                                                        <Box height="24px">
-                                                            {isConfirming? 
-                                                                <Flex align={'center'}>
-                                                                    <TimerIcon/>
-                                                                    <Text style={{'marginLeft':'10px'}}>Transaction Confirming</Text>
-                                                                </Flex> : null
-                                                            }
-                                                            {isConfirmed? 
-                                                                <Flex align={'center'}>
-                                                                    <CheckCircledIcon/>
-                                                                    <Text style={{'marginLeft':'10px'}}>Transaction Confirmed</Text>
-                                                                </Flex> : null 
-                                                            }
-                                                        </Box>
-                                                    </Flex>
-                                                </DrawerDescription>
-                                            </DrawerHeader>
-                                            <Progress value={progressPercentage()} className="w-[60%]"/>
-                                        </DrawerContent>
-                                        </Drawer>
+                                        <TriggerTransaction
+                                            isPendingClaim={isPendingClaim}
+                                            handleTransaction={handleClaimTokens}
+                                            isPending={isPending}
+                                            hash={hash}
+                                            isConfirming={isConfirming}
+                                            isConfirmed={isConfirmed}
+                                            buttonName="Claim Tokens"
+                                        />
                                     :
                                     <>
                                         <SendErc20Modal userAddress={`0x${userAddress}`} />

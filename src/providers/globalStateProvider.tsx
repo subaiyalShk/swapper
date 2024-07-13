@@ -12,7 +12,7 @@ export const AppContext = createContext({
     ensAvatar: '',
     accountBalance: null,
     isConnected: false
-    } as AppContextType);
+} as AppContextType);
 
 export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   

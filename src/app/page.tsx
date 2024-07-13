@@ -7,6 +7,7 @@ import Navbar from '../components/layout/navbar';
 import NetworkCard from '../components/layout/networkCard';
 import ContractCard from '@/components/layout/contractCard';
 import {AppContext} from '@/providers/globalStateProvider';
+import Image from 'next/image'
 
 export default function Home() {
   // ----- Global State Variables -----
@@ -24,7 +25,10 @@ export default function Home() {
   if (!isConnected) {
     return (
       <Wrapper>
-        <ConnectKitButton />
+        <Flex direction="column" align={'center'} gap="3">
+          <Image src="/Swapper.png" alt="hero" width={300} height={300} />
+          <ConnectKitButton />
+        </Flex>
       </Wrapper>
     )
   // ---- Render the main page
