@@ -88,10 +88,17 @@ export default function SendEthModal() {
   const {refetchNativeBalance, accountBalance} = useContext(AppContext);
 ```
 
-#### Theme Provider: provides radix ui theme variables to the entire render tree. 
-we will not go indepth on radiux as we are also using shadcn in our app and we might need to refactor since this is causing some styling conlficts.
+#### Theme Provider: provides radix-ui theme variables to the entire render tree. 
+we will not go indepth on radix-ui as we are also using shadcn in our app and we might need to refactor since this is causing some styling conlficts.
 
 
+### Page.tsx
+<img width="483" alt="Screenshot 2024-07-12 at 8 18 00 PM" src="https://github.com/user-attachments/assets/5cb65b68-e015-46ff-a458-d4885a6157d3">
+
+This component is the first child of Layout and it conditionally renders either the connectkit button or the dashboard.
+The dashboard is nothing but two siblings: networkcard and contractcard
+- NetworkCard -> lets users read their native balance, their connected chain, address, ens, and lets them send native currency to another wallet.
+- ContractCard -> lets users read balance associated to a smart contract, can see address of the smart contract and allows them to claim tokens. If a user has already claimed their tokens then the claim button is hidden and instead Send ERC20 button or Swap ERC 20 button is rendered. 
 
 
 
