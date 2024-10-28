@@ -4,10 +4,14 @@ import { ConnectKitButton } from 'connectkit';
 import Wrapper from '@/components/layout/wrapper';
 import {Flex} from '@radix-ui/themes';
 import Navbar from '../components/layout/navbar';
-import NetworkCard from '../components/web3/networkCard';
+import NetworkCard from '../components/layout/networkCard';
 import ContractCard from '@/components/web3/contractCard';
 import {AppContext} from '@/providers/globalStateProvider';
+import TokenSearchDropdown from '@/components/web3/TokenSearchDropdown';
+import TransactionHistory from '@/components/web3/transactionHistory';
 import Image from 'next/image'
+
+
 
 export default function Home() {
   // ----- Global State Variables -----
@@ -20,6 +24,10 @@ export default function Home() {
     accountBalance,
     isConnected
   } = useContext(AppContext);
+
+  const selectedTokens = (token: any) => {
+    console.log('Selected token:', token)
+  }
   
   // ---- Render login page
   if (!isConnected) {
@@ -37,7 +45,7 @@ export default function Home() {
       <>
         <Navbar/>
         <Wrapper>
-          <Flex wrap={'wrap'} gap="7">
+          <Flex wrap={'wrap'} justify={'center'} gap="7" mt="5" >
             <NetworkCard 
               chainId={chainId} 
               chainName={chain?.name} 
@@ -46,10 +54,19 @@ export default function Home() {
               ensAvatar={ensAvatar}
               balance={accountBalance?.formatted}
             />
-            <ContractCard 
-              userAddress={userAddress}
+            <Flex direction={'column'} justify={'between'}>
+              <TokenSearchDropdown 
+                onSelect={selectedTokens} 
+              />
+              <ContractCard 
+                userAddress={userAddress}
+              />
+            </Flex>
+            <TransactionHistory
+              initialAddress={userAddress}
+              providerUrl={process.env.NEXT_PUBLIC_INFURA_URL || ''}
             />
-          </Flex>          
+          </Flex>   
         </Wrapper>
       </>
     );

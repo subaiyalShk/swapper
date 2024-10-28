@@ -25,7 +25,7 @@ const NetworkCard: React.FC<NetworkCardProps> = ({
 }) => {
   return (
     <Box>
-        <Card>
+        <Card className="w-full max-w-2xl shadow-lg">
             <Flex justify="between" gap={'7'} direction={'column'}>
                 <Text as="div" size="5" weight="bold">
                     Connected Network

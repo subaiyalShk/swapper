@@ -35,7 +35,7 @@ export default function Navbar() {
         </Box>
         <Box height="64px">
           <div className="flex items-center justify-center">
-            <nav className="hidden gap-6 lg:flex">
+            {/* <nav className="hidden gap-6 lg:flex">
               {MENU_ITEMS.filter((menuItem) => !menuItem.isMobileOnly).map(
                 (menuItem, index) => (
                   <Link
@@ -50,7 +50,7 @@ export default function Navbar() {
                   </Link>
                 )
               )}
-            </nav>
+            </nav> */}
           </div>
         </Box>
         <Box pr={'10px'}>

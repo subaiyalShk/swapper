@@ -6,6 +6,7 @@ export interface AppState {
   // Add other state properties as needed
 }
 
+
 export interface AppContextType {
   chainId: any; 
   chain: any;

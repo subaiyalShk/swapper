@@ -50,13 +50,12 @@
   }
 }
 
-
-
 .main{
   height: 100vh;
   width: 100vw;
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
+  justify-content: center !important;
   align-items: center;
 }
 
