@@ -23,11 +23,15 @@ type Token = {
   logoURI: string;
 };
 
-interface TokenSearchDropdownProps {
-  onSelect?: (token: Token) => void;
-  className?: string;
+export interface TokenWithBalance extends Token {
+  balance?: string;
 }
 
+interface TokenSearchDropdownProps {
+  onSelect?: (token: TokenWithBalance) => void;
+  className?: string;
+  defaultToken?: TokenWithBalance;
+}
 const TokenImage = ({ src, alt, className }: { src: string; alt: string; className?: string }) => {
   const [error, setError] = useState(false);
   

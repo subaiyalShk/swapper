@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, createConfig, WagmiProvider } from 'wagmi';
 import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
@@ -35,6 +35,12 @@ const queryClient = new QueryClient();
 
 export function Web3Provider({ children }: { children: ReactNode }) {
   // 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  if(!mounted) return null
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>

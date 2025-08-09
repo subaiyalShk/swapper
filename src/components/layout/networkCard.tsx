@@ -23,68 +23,78 @@ const NetworkCard: React.FC<NetworkCardProps> = ({
     address,
     balance,
 }) => {
-  return (
-    <Box>
-        <Card className="w-full max-w-2xl shadow-lg">
-            <Flex justify="between" gap={'7'} direction={'column'}>
-                <Text as="div" size="5" weight="bold">
-                    Connected Network
-                </Text>
-                <Flex gap="3" align="center">
-                    {ensAvatar && ensName && (
-                        <Avatar
-                        size="3"
-                        src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
-                        radius="full"
-                        fallback="T"
-                        />
-                    )}
-                    <DataList.Root>
-                        <DataList.Item align="center">
-                        <DataList.Label minWidth="88px">Chain Name</DataList.Label>
-                        <DataList.Value>
-                            <Badge color="jade" variant="soft" radius="full">
-                            {chainName}
-                            </Badge>
-                        </DataList.Value>
-                        </DataList.Item>
-                        <DataList.Item>
-                        <DataList.Label minWidth="88px">Chain ID</DataList.Label>
-                        <DataList.Value>
-                            <Flex align="center" gap="2">
-                            <Code variant="ghost">{chainId}</Code>
-                            <IconButton
-                                size="1"
-                                aria-label="Copy value"
-                                color="gray"
-                                variant="ghost"
-                            >
-                                {/* <CopyIcon /> */}
-                            </IconButton>
-                            </Flex>
-                        </DataList.Value>
-                        </DataList.Item>
-                        <DataList.Item>
-                        <DataList.Label minWidth="88px">ENS</DataList.Label>
-                        <DataList.Value>{ensName?ensName:<Link href="https://ens.domains/">Register your ENS here</Link>}</DataList.Value>
-                        </DataList.Item>
-                        <DataList.Item>
-                        <DataList.Label minWidth="88px">Wallet Address</DataList.Label>
-                        <DataList.Value>
-                            <Link href={'https://etherscan.io/address/'+address}>{address?.slice(0,4)+"..."+address?.slice(-4)}</Link>
-                        </DataList.Value>
-                        </DataList.Item>
-                        <DataList.Item>
-                        <DataList.Label minWidth="88px">Balance</DataList.Label>
-                        <DataList.Value>{balance}</DataList.Value>
-                        </DataList.Item>
-                    </DataList.Root>
+    const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;  // Prevent hydration mismatch
+  }else{
+    return (
+        <Box>
+            <Card className="w-full max-w-2xl shadow-lg">
+                <Flex justify="between" gap={'7'} direction={'column'}>
+                    <Text as="div" size="5" weight="bold">
+                        Connected Network
+                    </Text>
+                    <Flex gap="3" align="center">
+                        {ensAvatar && ensName && (
+                            <Avatar
+                            size="3"
+                            src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
+                            radius="full"
+                            fallback="T"
+                            />
+                        )}
+                        <DataList.Root>
+                            <DataList.Item align="center">
+                            <DataList.Label minWidth="88px">Chain Name</DataList.Label>
+                            <DataList.Value>
+                                <Badge color="jade" variant="soft" radius="full">
+                                {chainName}
+                                </Badge>
+                            </DataList.Value>
+                            </DataList.Item>
+                            <DataList.Item>
+                            <DataList.Label minWidth="88px">Chain ID</DataList.Label>
+                            <DataList.Value>
+                                <Flex align="center" gap="2">
+                                <Code variant="ghost">{chainId}</Code>
+                                <IconButton
+                                    size="1"
+                                    aria-label="Copy value"
+                                    color="gray"
+                                    variant="ghost"
+                                >
+                                    {/* <CopyIcon /> */}
+                                </IconButton>
+                                </Flex>
+                            </DataList.Value>
+                            </DataList.Item>
+                            <DataList.Item>
+                            <DataList.Label minWidth="88px">ENS</DataList.Label>
+                            <DataList.Value>{ensName?ensName:<Link href="https://ens.domains/">Register your ENS here</Link>}</DataList.Value>
+                            </DataList.Item>
+                            <DataList.Item>
+                            <DataList.Label minWidth="88px">Wallet Address</DataList.Label>
+                            <DataList.Value>
+                                <Link href={'https://etherscan.io/address/'+address}>{address?.slice(0,4)+"..."+address?.slice(-4)}</Link>
+                            </DataList.Value>
+                            </DataList.Item>
+                            <DataList.Item>
+                            <DataList.Label minWidth="88px">Balance</DataList.Label>
+                            <DataList.Value>{balance}</DataList.Value>
+                            </DataList.Item>
+                        </DataList.Root>
+                    </Flex>
+                    <SendEthModal />
                 </Flex>
-                <SendEthModal />
-            </Flex>
-        </Card>
-    </Box>
-  );
+            </Card>
+        </Box>
+        );
+    }
 };
 
 export default NetworkCard;

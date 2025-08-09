@@ -1,5 +1,5 @@
 'use client';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { ConnectKitButton } from 'connectkit';
 import Wrapper from '@/components/layout/wrapper';
 import {Flex} from '@radix-ui/themes';
@@ -7,13 +7,14 @@ import Navbar from '../components/layout/navbar';
 import NetworkCard from '../components/layout/networkCard';
 import ContractCard from '@/components/web3/contractCard';
 import {AppContext} from '@/providers/globalStateProvider';
-import TokenSearchDropdown from '@/components/web3/TokenSearchDropdown';
+import TokenSearchDropdown from '@/components/web3/tokenSearchDropdown';
 import TransactionHistory from '@/components/web3/transactionHistory';
 import Image from 'next/image'
 
 
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
   // ----- Global State Variables -----
   const {
     chainId, 
@@ -28,7 +29,14 @@ export default function Home() {
   const selectedTokens = (token: any) => {
     console.log('Selected token:', token)
   }
-  
+   // Handle hydration mismatch by only rendering after component mounts
+   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;  // Return null on first render to avoid hydration mismatch
+  }
   // ---- Render login page
   if (!isConnected) {
     return (
